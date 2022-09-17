@@ -39,3 +39,25 @@ def sub_to_timedelta(t: SubRipTime) -> timedelta:
         seconds=t.seconds,
         milliseconds=t.milliseconds,
     )
+
+
+def format_base64_data_url(mime_type: str, encoded_data: str) -> str:
+    """
+    Create a Base64 data URL.
+
+    See https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URLs
+
+    Args:
+        mime_type:
+            MIME content type. See https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types
+        encoded_data:
+            Base64 encoded data.
+
+    Returns:
+        A Base64 data URL.
+
+    Examples:
+        >>> format_base64_data_url("image/jpeg", "YXNkZg==")
+        'data:image/jpeg;base64,YXNkZg=='
+    """
+    return f"data:{mime_type};base64,{encoded_data}"
