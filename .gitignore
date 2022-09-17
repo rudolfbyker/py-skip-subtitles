@@ -1,2 +1,4 @@
 .idea/
 */version.py
+build/
+*.egg-info/
