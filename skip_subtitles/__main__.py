@@ -33,10 +33,10 @@ from .util import get_filters_from_subtitles
     help="Output file",
 )
 @click.option(
-    "--offset",
+    "--subs-subs_offset",
     type=float,
     default=0,
-    help="Subtitles offset",
+    help="Subtitles subs_offset",
 )
 @click.option(
     "--margin",
@@ -44,7 +44,7 @@ from .util import get_filters_from_subtitles
     default=0,
     help="Filtering margin",
 )
-def main(subtitles, screenshot, screenshot_time, output, offset, margin):
+def main(subtitles, screenshot, screenshot_time, output, subs_offset, margin):
     """
     \b
     ░▄▀▀░█▄▀░█▒█▀▄░░░▄▀▀░█▒█░██▄░▀█▀░█░▀█▀░█▒░▒██▀░▄▀▀
@@ -56,7 +56,7 @@ def main(subtitles, screenshot, screenshot_time, output, offset, margin):
         filters=list(
             get_filters_from_subtitles(
                 subs=pysrt.from_string(subtitles.read()),
-                offset=offset,
+                offset=subs_offset,
                 margin=margin,
                 predicate=has_blasphemy,
             )
