@@ -38,15 +38,24 @@ from ._util import (
     "--subs-offset",
     type=float,
     default=0,
-    help="Subtitles offset. Use this when the subtitles file does not align perfectly with the streaming service.",
+    help="Subtitles offset, as a decimal number of seconds. "
+    "Use this when the subtitles file does not align perfectly with the streaming service.",
 )
 @click.option(
     "--margin",
     type=float,
     default=0,
-    help="Filtering margin",
+    help="Filtering margin, as a decimal number of seconds. This is how long before the start of the filtered "
+    "subtitles to start muting, and how long to keep muting afterwards.",
 )
-def main(subtitles, screenshot, screenshot_time, output, subs_offset, margin):
+def main(
+    subtitles,
+    screenshot,
+    screenshot_time: float,
+    output,
+    subs_offset: float,
+    margin: float,
+):
     """
     \b
     ░▄▀▀░█▄▀░█▒█▀▄░░░▄▀▀░█▒█░██▄░▀█▀░█░▀█▀░█▒░▒██▀░▄▀▀
@@ -54,7 +63,7 @@ def main(subtitles, screenshot, screenshot_time, output, subs_offset, margin):
 
     SUBTITLES: Subtitles input file.
     SCREENSHOT: File containing screenshot, for synchronization.
-    SCREENSHOT_TIME: The timestamp of the screenshot, as a decimal number, in seconds.
+    SCREENSHOT_TIME: The timestamp of the screenshot, as a decimal number of seconds.
     OUTPUT: Output file, to be used with VideoSkip.
     """
     log_to_stdout()
@@ -63,8 +72,8 @@ def main(subtitles, screenshot, screenshot_time, output, subs_offset, margin):
         filters=list(
             get_filters_from_subtitles(
                 subs=pysrt.from_string(subtitles.read()),
-                offset=subs_offset,
-                margin=margin,
+                offset=timedelta(seconds=subs_offset),
+                margin=timedelta(seconds=margin),
                 predicate=has_blasphemy,
             )
         ),
