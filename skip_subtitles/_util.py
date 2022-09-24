@@ -64,7 +64,7 @@ def format_base64_data_url(
         A Base64 data URL.
 
     Examples:
-        >>> format_base64_data_url("image/jpeg", "YXNkZg==")
+        >>> format_base64_data_url(mime_type="image/jpeg", encoded_data="YXNkZg==")
         'data:image/jpeg;base64,YXNkZg=='
     """
     return f"data:{mime_type};base64,{encoded_data}"
