@@ -1,4 +1,5 @@
 from datetime import timedelta
+from typing import Dict
 
 import click
 import pysrt
@@ -47,6 +48,13 @@ from ._video_skip.screenshot import VideoSkipScreenshot
     help="Filtering margin, as a decimal number of seconds. This is how long before the start of the filtered "
     "subtitles to start muting, and how long to keep muting afterwards.",
 )
+@click.option(
+    "--service-offsets",
+    type=str,
+    default="",
+    help="Offsets for specific streaming services. Use format `name=duration`, separating multiple values by commas, "
+    "e.g. `--service-offset=google=0.3,netflix=1.2`. The duration is a decimal number of seconds.",
+)
 def main(
     subtitles,
     screenshot,
@@ -54,6 +62,7 @@ def main(
     output,
     subs_offset: float,
     margin: float,
+    service_offsets: str,
 ):
     """
     \b
@@ -76,10 +85,7 @@ def main(
                 predicate=has_blasphemy,
             )
         ),
-        serviceOffsets={
-            # TODO: Allow specifying offset per service.
-            "google": 0
-        },
+        service_offsets=parse_service_offsets(service_offsets),
         screenshot=VideoSkipScreenshot(
             image_base64=format_base64_data_url(
                 mime_type="image/jpeg",
@@ -96,3 +102,19 @@ def main(
     )
 
     output.write(str(result))
+
+
+def parse_service_offsets(offsets_input: str) -> Dict[str, float]:
+    """
+    Examples:
+
+        >>> parse_service_offsets("")
+        {}
+
+        >>> parse_service_offsets("google=0.2,netflix=1.3")
+        {'google': 0.2, 'netflix': 1.3}
+    """
+    return {
+        k: float(v)
+        for k, v in [o.split("=") for o in offsets_input.split(",") if len(o)]
+    }

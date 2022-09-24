@@ -12,13 +12,13 @@ from .screenshot import VideoSkipScreenshot
 class VideoSkipFile:
     screenshot: VideoSkipScreenshot
     filters: List[VideoSkipFilter]
-    serviceOffsets: Dict[str, float]
+    service_offsets: Dict[str, float]
 
     def __str__(self) -> str:
         filters = "\n\n".join(str(s) for s in self.filters)
         return (
             f"{self.screenshot}\n\n"
             f"{filters}\n\n"
-            f"{json.dumps(self.serviceOffsets)}\n\n"
+            f"{json.dumps(self.service_offsets)}\n\n"
             f"{self.screenshot.image_base64}"
         )
