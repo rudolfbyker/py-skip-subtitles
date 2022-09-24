@@ -2,3 +2,4 @@
 */version.py
 build/
 *.egg-info/
+tmp/

@@ -4,11 +4,17 @@ from datetime import timedelta
 
 import click
 import pysrt
+from PIL import Image
 
 from ._video_skip.file import VideoSkipFile
 from ._video_skip.screenshot import VideoSkipScreenshot
-from .predicates import has_blasphemy
-from .util import get_filters_from_subtitles
+from ._predicates import has_blasphemy
+from ._util import (
+    get_filters_from_subtitles,
+    format_base64_data_url,
+    image_to_base64,
+    limit_image_resolution,
+)
 
 
 @click.command()
@@ -67,7 +73,15 @@ def main(subtitles, screenshot, screenshot_time, output, subs_offset, margin):
             "google": 0
         },
         screenshot=VideoSkipScreenshot(
-            image_base64="todo read from screenshot file",
+            image_base64=format_base64_data_url(
+                mime_type="image/jpeg",
+                encoded_data=image_to_base64(
+                    limit_image_resolution(
+                        image=Image.open(screenshot),
+                        max_height=240,
+                    )
+                ),
+            ),
             timestamp=timedelta(seconds=screenshot_time),
             description="screenshot",
         ),

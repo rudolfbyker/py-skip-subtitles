@@ -1,10 +1,13 @@
+from base64 import b64encode
 from datetime import timedelta
+from io import BytesIO
 from typing import Generator, Callable, Optional
 
+from PIL import Image
 from pysrt import SubRipFile, SubRipItem, SubRipTime
 
 from ._video_skip.filter import VideoSkipFilter
-from .predicates import SubtitlePredicateResult
+from ._predicates import SubtitlePredicateResult
 
 
 def get_filters_from_subtitles(
@@ -41,7 +44,11 @@ def sub_to_timedelta(t: SubRipTime) -> timedelta:
     )
 
 
-def format_base64_data_url(mime_type: str, encoded_data: str) -> str:
+def format_base64_data_url(
+    *,
+    mime_type: str,
+    encoded_data: str,
+) -> str:
     """
     Create a Base64 data URL.
 
@@ -61,3 +68,33 @@ def format_base64_data_url(mime_type: str, encoded_data: str) -> str:
         'data:image/jpeg;base64,YXNkZg=='
     """
     return f"data:{mime_type};base64,{encoded_data}"
+
+
+def limit_image_resolution(
+    *,
+    image: Image,
+    max_height: int = -1,
+    max_width: int = -1,
+) -> Image:
+    """
+    Scale the image down if it's greater than the given maximum height or width. Returns a scaled copy of the image.
+    """
+    if max_width == -1 and max_height == -1:
+        scale = 1
+    elif max_width == -1:
+        scale = max_width / image.width
+    elif max_height == -1:
+        scale = max_height / image.height
+    else:
+        scale = min(max_width / image.width, max_height / image.height)
+
+    return image.resize((image.width * scale, image.height * scale))
+
+
+def image_to_base64(image: Image) -> str:
+    """
+    Encode the image data to a base64 string.
+    """
+    output_buffer = BytesIO()
+    image.save(output_buffer, format="JPG")
+    return b64encode(output_buffer.getvalue()).decode("utf-8")
