@@ -15,22 +15,18 @@ from .util import get_filters_from_subtitles
 @click.argument(
     "subtitles",
     type=click.File("r", encoding="utf8"),
-    help="Subtitles input file",
 )
 @click.argument(
     "screenshot",
     type=click.File("rb"),
-    help="Screenshot input file",
 )
 @click.argument(
     "screenshot_time",
     type=float,
-    help="Screenshot time, as a decimal number in seconds.",
 )
 @click.argument(
     "output",
     type=click.File("w", encoding="utf8"),
-    help="Output file",
 )
 @click.option(
     "--subs-subs_offset",
@@ -49,6 +45,11 @@ def main(subtitles, screenshot, screenshot_time, output, subs_offset, margin):
     \b
     ░▄▀▀░█▄▀░█▒█▀▄░░░▄▀▀░█▒█░██▄░▀█▀░█░▀█▀░█▒░▒██▀░▄▀▀
     ▒▄██░█▒█░█░█▀▒▒░▒▄██░▀▄█▒█▄█░▒█▒░█░▒█▒▒█▄▄░█▄▄▒▄██
+
+    SUBTITLES: Subtitles input file.
+    SCREENSHOT: File containing screenshot, for synchronization.
+    SCREENSHOT_TIME: The timestamp of the screenshot, as a decimal number, in seconds.
+    OUTPUT: Output file, to be used with VideoSkip.
     """
     log_to_stdout()
 
