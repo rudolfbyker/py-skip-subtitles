@@ -79,16 +79,34 @@ def limit_image_resolution(
     """
     Scale the image down if it's greater than the given maximum height or width. Returns a scaled copy of the image.
     """
+    scale = calculate_image_scale(
+        max_height=max_height,
+        max_width=max_width,
+        original_height=image.height,
+        original_width=image.width,
+    )
+    new_width = int(image.width * scale)
+    new_height = int(image.height * scale)
+    return image.resize((new_width, new_height))
+
+
+def calculate_image_scale(
+    *,
+    max_height: int,
+    max_width: int,
+    original_height: int,
+    original_width: int,
+):
     if max_width == -1 and max_height == -1:
         scale = 1
     elif max_width == -1:
-        scale = max_width / image.width
+        scale = max_height / original_height
     elif max_height == -1:
-        scale = max_height / image.height
+        scale = max_width / original_width
     else:
-        scale = min(max_width / image.width, max_height / image.height)
+        scale = min(max_width / original_width, max_height / original_height)
 
-    return image.resize((image.width * scale, image.height * scale))
+    return scale
 
 
 def image_to_base64(image: Image) -> str:
