@@ -29,10 +29,10 @@ from .util import get_filters_from_subtitles
     type=click.File("w", encoding="utf8"),
 )
 @click.option(
-    "--subs-subs_offset",
+    "--subs-offset",
     type=float,
     default=0,
-    help="Subtitles subs_offset",
+    help="Subtitles offset. Use this when the subtitles file does not align perfectly with the streaming service.",
 )
 @click.option(
     "--margin",
