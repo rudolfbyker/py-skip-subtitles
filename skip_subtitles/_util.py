@@ -114,5 +114,5 @@ def image_to_base64(image: Image) -> str:
     Encode the image data to a base64 string.
     """
     output_buffer = BytesIO()
-    image.save(output_buffer, format="JPG")
+    image.save(output_buffer, format="JPEG")
     return b64encode(output_buffer.getvalue()).decode("utf-8")
