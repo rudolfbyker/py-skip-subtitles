@@ -97,16 +97,37 @@ def calculate_image_scale(
     original_height: int,
     original_width: int,
 ):
-    if max_width == -1 and max_height == -1:
-        scale = 1
-    elif max_width == -1:
-        scale = max_height / original_height
-    elif max_height == -1:
-        scale = max_width / original_width
-    else:
-        scale = min(max_width / original_width, max_height / original_height)
+    """
+    Examples:
 
-    return scale
+        >>> calculate_image_scale(max_height=30, max_width=40, original_height=300, original_width=400)
+        0.1
+
+        >>> calculate_image_scale(max_height=30, max_width=40, original_height=400, original_width=300)
+        0.075
+
+        >>> calculate_image_scale(max_height=40, max_width=30, original_height=300, original_width=400)
+        0.075
+
+        >>> calculate_image_scale(max_height=-1, max_width=-1, original_height=300, original_width=400)
+        1
+
+        >>> calculate_image_scale(max_height=30, max_width=-1, original_height=300, original_width=400)
+        0.1
+
+        >>> calculate_image_scale(max_height=-1, max_width=40, original_height=300, original_width=400)
+        0.1
+    """
+    if max_width == -1 and max_height == -1:
+        return 1
+
+    if max_width == -1:
+        return max_height / original_height
+
+    if max_height == -1:
+        return max_width / original_width
+
+    return min(max_width / original_width, max_height / original_height)
 
 
 def image_to_base64(image: Image) -> str:
